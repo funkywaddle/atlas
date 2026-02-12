@@ -5,7 +5,10 @@
     "license": "MIT",
     "authors": [
         {
-            "name": "QualityCoder"
+            "name": "Phred",
+            "email": "phred@getphred.com",
+            "homepage": "https://getphred.com",
+            "role": "Owner"
         }
     ],
     "require": {

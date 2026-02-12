@@ -104,6 +104,8 @@ Implementing modular routing in this way will not only enhance the functionality
 - Atlas will have route parameters
   - indicated by `{{var}}` 
     - example: `https://example.com/users/{{user_id}}`
+  - optional parameters indicated by `{{var?}}`
+    - example: `https://example.com/blog/{{slug?}}`
 - Atlas will have route parameter validation options
   - `$router->get('/users/{{user_id}}', 'UserController::__invoke')->valid('user_id', ['numeric','int','required']);`
   - Supporting for multiple parameters each having their own validation
@@ -111,6 +113,9 @@ Implementing modular routing in this way will not only enhance the functionality
       - `$router->get('/users/{{user_id}}/posts/{{post_id}}', 'PostController@show')->valid(['user_id' => ['numeric', 'int', 'required'], 'post_id' => ['numeric', 'int', 'required']]);`
     - chaining syntax
       - `$router->get('/users/{{user_id}}/posts/{{post_id}}', 'PostController@show')->valid('user_id', ['required'])->valid('post_id', ['required']);`
+- Atlas will have Default Values
+  - `$router->get('/blog/{{page}}')->default('page', 1);`
+  - Providing a default value automatically marks the parameter as optional.
 - Atlas will have route names
   - `$router->get('/users/{{user_id}}', 'UserController::__invoke')->name('single_user');`
   - `$router->get('/users', 'UserController::__invoke')->name('user_list');`
