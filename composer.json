@@ -1,0 +1,32 @@
+{
+    "name": "getphred/atlas",
+    "description": "A high-performance, modular PHP routing engine with PSR-7 support.",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "QualityCoder"
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+        "psr/http-message": "^1.0 || ^2.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^10.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Atlas\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Atlas\\Tests\\": "tests/"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "stable"
+}
