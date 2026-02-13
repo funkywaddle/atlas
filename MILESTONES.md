@@ -4,11 +4,11 @@ This document outlines the phased development roadmap for the Atlas Routing engi
 
 ## Milestone 1: Foundation & Core Architecture
 *Goal: Establish the base classes, configuration handling, and the internal route representation.*
-- [ ] Define `Route` and `RouteDefinition` classes (SRP focused).
-- [ ] Implement the `Router` class with Inversion of Control (DI for config).
-- [ ] Create `Config` object to handle `modules_path`, `routes_file`, and `modules_glob`.
-- [ ] Implement `MissingConfigurationException`.
-- [ ] Setup Basic PHPUnit suite with a "Hello World" route test.
+- [x] Define `Route` and `RouteDefinition` classes (SRP focused).
+- [x] Implement the `Router` class with Inversion of Control (DI for config).
+- [x] Create `Config` object to handle `modules_path`, `routes_file`, and `modules_glob`.
+- [x] Implement `MissingConfigurationException`.
+- [x] Setup Basic PHPUnit suite with a "Hello World" route test.
 
 ## Milestone 2: Basic URI Matching & Methods
 *Goal: Implement the matching engine for standard HTTP methods and static URIs.*

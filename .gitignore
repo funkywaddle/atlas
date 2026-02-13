@@ -2,6 +2,8 @@
 composer.lock
 .env
 .phpunit.result.cache
+CLAUDE.md
+AGENTS.md
 /coverage/
 .idea/
 .vscode/
