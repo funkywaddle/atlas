@@ -1,6 +1,6 @@
 <?php
 
-namespace Atlas;
+namespace Atlas\Router;
 
 class RouteGroup
 {

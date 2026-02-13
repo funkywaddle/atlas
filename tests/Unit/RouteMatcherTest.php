@@ -2,7 +2,7 @@
 
 namespace Atlas\Tests\Unit;
 
-use Atlas\Router;
+use Atlas\Router\Router;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UriInterface;
@@ -11,11 +11,11 @@ final class RouteMatcherTest extends TestCase
 {
     public function testReturnsRouteOnSuccessfulMatch(): void
     {
-        $config = new \Atlas\Config([
+        $config = new \Atlas\Tests\Config\Config([
             'modules_path' => ['/path/to/modules']
         ]);
 
-        $router = new Router($config);
+        $router = new \Atlas\Router\Router($config);
 
         $router->get('/hello', 'HelloWorldHandler');
 
@@ -31,18 +31,18 @@ final class RouteMatcherTest extends TestCase
 
         $matchedRoute = $router->match($request);
 
-        $this->assertInstanceOf(\Atlas\RouteDefinition::class, $matchedRoute);
+        $this->assertInstanceOf(\Atlas\Router\RouteDefinition::class, $matchedRoute);
         $this->assertSame('/hello', $matchedRoute->getPath());
         $this->assertSame('HelloWorldHandler', $matchedRoute->getHandler());
     }
 
     public function testReturnsNullOnNoMatch(): void
     {
-        $config = new \Atlas\Config([
+        $config = new \Atlas\Tests\Config\Config([
             'modules_path' => ['/path/to/modules']
         ]);
 
-        $router = new Router($config);
+        $router = new \Atlas\Router\Router($config);
 
         $router->get('/test', 'Handler');
 
@@ -61,13 +61,13 @@ final class RouteMatcherTest extends TestCase
         $this->assertNull($matchedRoute);
     }
 
-    public function testHttpMethodMatchingCaseInsensitive(): void
+    public function testCaseInsensitiveHttpMethodMatching(): void
     {
-        $config = new \Atlas\Config([
+        $config = new \Atlas\Tests\Config\Config([
             'modules_path' => ['/path/to/modules']
         ]);
 
-        $router = new Router($config);
+        $router = new \Atlas\Router\Router($config);
 
         $router->get('/test', 'Handler');
 
@@ -88,11 +88,11 @@ final class RouteMatcherTest extends TestCase
 
     public function testRouteCollectionIteratesCorrectly(): void
     {
-        $config = new \Atlas\Config([
+        $config = new \Atlas\Tests\Config\Config([
             'modules_path' => ['/path/to/modules']
         ]);
 
-        $router = new Router($config);
+        $router = new \Atlas\Router\Router($config);
 
         $router->get('/route1', 'Handler1');
         $router->post('/route2', 'Handler2');
@@ -102,31 +102,32 @@ final class RouteMatcherTest extends TestCase
 
         $routeArray = iterator_to_array($routes);
         $this->assertCount(2, $routeArray);
-        $this->assertInstanceOf(\Atlas\RouteDefinition::class, $routeArray[0]);
-        $this->assertInstanceOf(\Atlas\RouteDefinition::class, $routeArray[1]);
+        $this->assertInstanceOf(\Atlas\Router\RouteDefinition::class, $routeArray[0]);
+        $this->assertInstanceOf(\Atlas\Router\RouteDefinition::class, $routeArray[1]);
     }
 
     public function testUrlGenerationWithNamedRoute(): void
     {
-        $config = new \Atlas\Config([
+        $config = new \Atlas\Tests\Config\Config([
             'modules_path' => ['/path/to/modules']
         ]);
 
-        $router = new Router($config);
+        $router = new \Atlas\Router\Router($config);
 
         $router->get('/users', 'UserListHandler', 'user_list');
 
         $url = $router->url('user_list');
+
         $this->assertSame('/users', $url);
     }
 
     public function testHttpMethodsReturnSameInstanceForChaining(): void
     {
-        $config = new \Atlas\Config([
+        $config = new \Atlas\Tests\Config\Config([
             'modules_path' => ['/path/to/modules']
         ]);
 
-        $router = new Router($config);
+        $router = new \Atlas\Router\Router($config);
 
         $methodsResult = $router
             ->get('/get', 'Handler')
@@ -135,6 +136,6 @@ final class RouteMatcherTest extends TestCase
             ->patch('/patch', 'Handler')
             ->delete('/delete', 'Handler');
 
-        $this->assertTrue($methodsResult instanceof Router);
+        $this->assertTrue($methodsResult instanceof \Atlas\Router\Router);
     }
 }

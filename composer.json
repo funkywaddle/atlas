@@ -25,6 +25,7 @@
     },
     "autoload-dev": {
         "psr-4": {
+            "Atlas\\": "src/",
             "Atlas\\Tests\\": "tests/"
         }
     },

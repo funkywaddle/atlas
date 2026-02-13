@@ -1,6 +1,6 @@
 <?php
 
-namespace Atlas;
+namespace Atlas\Exception;
 
 class RouteNotFoundException extends \RuntimeException
 {

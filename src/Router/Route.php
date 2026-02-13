@@ -1,6 +1,6 @@
 <?php
 
-namespace Atlas;
+namespace Atlas\Router;
 
 use Psr\Http\Message\ServerRequestInterface;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Atlas;
+namespace Atlas\Router;
 
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -10,8 +10,9 @@ class Router
     protected mixed $fallbackHandler = null;
 
     public function __construct(
-        private readonly Config $config
-    ) {}
+        private readonly Config\Config $config
+    ) {
+    }
 
     public function get(string $path, string|callable $handler, string|null $name = null): self
     {

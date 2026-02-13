@@ -1,6 +1,6 @@
 <?php
 
-namespace Atlas;
+namespace Atlas\Config;
 
 use ArrayAccess;
 use IteratorAggregate;
