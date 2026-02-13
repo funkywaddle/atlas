@@ -12,10 +12,10 @@ This document outlines the phased development roadmap for the Atlas Routing engi
 
 ## Milestone 2: Basic URI Matching & Methods
 *Goal: Implement the matching engine for standard HTTP methods and static URIs.*
-- [ ] Implement fluent methods: `get()`, `post()`, `put()`, `patch()`, `delete()`.
-- [ ] Build the URI Matcher for static paths.
-- [ ] Support for PSR-7 `ServerRequestInterface` type-hinting in the matcher.
-- [ ] Implement basic Error Handling (Global 404).
+- [x] Implement fluent methods: `get()`, `post()`, `put()`, `patch()`, `delete()`.
+- [x] Build the URI Matcher for static paths.
+- [x] Support for PSR-7 `ServerRequestInterface` type-hinting in the matcher.
+- [x] Implement basic Error Handling (Global 404).
 
 ## Milestone 3: Parameters & Validation
 *Goal: Support for dynamic URIs with the `{{var}}` syntax and parameter validation.*

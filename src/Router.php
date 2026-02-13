@@ -7,6 +7,7 @@ use Psr\Http\Message\ServerRequestInterface;
 class Router
 {
     private array $routes = [];
+    protected mixed $fallbackHandler = null;
 
     public function __construct(
         private readonly Config $config
@@ -57,7 +58,13 @@ class Router
 
     private function normalizePath(string $path): string
     {
-        return '/' . ltrim($path, '/');
+        $normalized = trim($path, '/');
+
+        if (empty($normalized)) {
+            return '/';
+        }
+
+        return '/' . $normalized;
     }
 
     protected function storeRoute(RouteDefinition $routeDefinition): void
@@ -88,6 +95,26 @@ class Router
         }
 
         return null;
+    }
+
+    public function matchOrFail(ServerRequestInterface $request): RouteDefinition
+    {
+        $method = strtoupper($request->getMethod());
+        $path = $this->normalizePath($request->getUri()->getPath());
+
+        foreach ($this->getRoutes() as $routeDefinition) {
+            if (strtoupper($routeDefinition->getMethod()) === $method && $routeDefinition->getPath() === $path) {
+                return $routeDefinition;
+            }
+        }
+
+        throw new NotFoundRouteException('No route matched the request');
+    }
+
+    public function fallback(mixed $handler): self
+    {
+        $this->fallbackHandler = $handler;
+        return $this;
     }
 
     public function url(string $name, array $parameters = []): string
