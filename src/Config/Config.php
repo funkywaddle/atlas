@@ -22,7 +22,7 @@ class Config implements ArrayAccess, IteratorAggregate
      * @param array $options Configuration array containing routing settings
      */
     public function __construct(
-        private readonly array $options
+        private array $options
     ) {}
 
     /**

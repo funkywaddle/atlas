@@ -9,6 +9,8 @@ namespace Atlas\Router;
  */
 class RouteGroup
 {
+    use PathHelper;
+
     /**
      * Constructs a new RouteGroup instance.
      *
@@ -34,74 +36,131 @@ class RouteGroup
         return $self;
     }
 
-    /**
-     * Registers a GET route with group prefix.
-     *
-     * @param string $path URI path
-     * @param string|callable $handler Route handler
-     * @param string|null $name Optional route name
-     * @return self Fluent interface
-     */
-    public function get(string $path, string|callable $handler, string|null $name = null): self
+    public function get(string $path, mixed $handler, string|null $name = null): RouteDefinition
     {
         $fullPath = $this->buildFullPath($path);
-        return $this->router ? $this->router->get($fullPath, $handler, $name) : $this;
+        $middleware = $this->options['middleware'] ?? [];
+        $validation = $this->options['validation'] ?? [];
+        $defaults = $this->options['defaults'] ?? [];
+
+        if ($this->router) {
+            return $this->router->registerCustomRoute('GET', $fullPath, $handler, $name, $middleware, $validation, $defaults);
+        }
+        
+        return new RouteDefinition('GET', $fullPath, $fullPath, $handler, $name, $middleware, $validation, $defaults);
     }
 
-    /**
-     * Registers a POST route with group prefix.
-     *
-     * @param string $path URI path
-     * @param string|callable $handler Route handler
-     * @param string|null $name Optional route name
-     * @return self Fluent interface
-     */
-    public function post(string $path, string|callable $handler, string|null $name = null): self
+    public function post(string $path, mixed $handler, string|null $name = null): RouteDefinition
     {
         $fullPath = $this->buildFullPath($path);
-        return $this->router ? $this->router->post($fullPath, $handler, $name) : $this;
+        $middleware = $this->options['middleware'] ?? [];
+        $validation = $this->options['validation'] ?? [];
+        $defaults = $this->options['defaults'] ?? [];
+
+        if ($this->router) {
+            return $this->router->registerCustomRoute('POST', $fullPath, $handler, $name, $middleware, $validation, $defaults);
+        }
+        
+        return new RouteDefinition('POST', $fullPath, $fullPath, $handler, $name, $middleware, $validation, $defaults);
     }
 
-    /**
-     * Registers a PUT route with group prefix.
-     *
-     * @param string $path URI path
-     * @param string|callable $handler Route handler
-     * @param string|null $name Optional route name
-     * @return self Fluent interface
-     */
-    public function put(string $path, string|callable $handler, string|null $name = null): self
+    public function put(string $path, mixed $handler, string|null $name = null): RouteDefinition
     {
         $fullPath = $this->buildFullPath($path);
-        return $this->router ? $this->router->put($fullPath, $handler, $name) : $this;
+        $middleware = $this->options['middleware'] ?? [];
+        $validation = $this->options['validation'] ?? [];
+        $defaults = $this->options['defaults'] ?? [];
+
+        if ($this->router) {
+            return $this->router->registerCustomRoute('PUT', $fullPath, $handler, $name, $middleware, $validation, $defaults);
+        }
+        
+        return new RouteDefinition('PUT', $fullPath, $fullPath, $handler, $name, $middleware, $validation, $defaults);
     }
 
-    /**
-     * Registers a PATCH route with group prefix.
-     *
-     * @param string $path URI path
-     * @param string|callable $handler Route handler
-     * @param string|null $name Optional route name
-     * @return self Fluent interface
-     */
-    public function patch(string $path, string|callable $handler, string|null $name = null): self
+    public function patch(string $path, mixed $handler, string|null $name = null): RouteDefinition
     {
         $fullPath = $this->buildFullPath($path);
-        return $this->router ? $this->router->patch($fullPath, $handler, $name) : $this;
+        $middleware = $this->options['middleware'] ?? [];
+        $validation = $this->options['validation'] ?? [];
+        $defaults = $this->options['defaults'] ?? [];
+
+        if ($this->router) {
+            return $this->router->registerCustomRoute('PATCH', $fullPath, $handler, $name, $middleware, $validation, $defaults);
+        }
+        
+        return new RouteDefinition('PATCH', $fullPath, $fullPath, $handler, $name, $middleware, $validation, $defaults);
     }
 
-    /**
-     * Registers a DELETE route with group prefix.
-     *
-     * @param string $path URI path
-     * @param string|callable $handler Route handler
-     * @param string|null $name Optional route name
-     * @return self Fluent interface
-     */
-    public function delete(string $path, string|callable $handler, string|null $name = null): self
+    public function delete(string $path, mixed $handler, string|null $name = null): RouteDefinition
     {
         $fullPath = $this->buildFullPath($path);
-        return $this->router ? $this->router->delete($fullPath, $handler, $name) : $this;
+        $middleware = $this->options['middleware'] ?? [];
+        $validation = $this->options['validation'] ?? [];
+        $defaults = $this->options['defaults'] ?? [];
+
+        if ($this->router) {
+            return $this->router->registerCustomRoute('DELETE', $fullPath, $handler, $name, $middleware, $validation, $defaults);
+        }
+        
+        return new RouteDefinition('DELETE', $fullPath, $fullPath, $handler, $name, $middleware, $validation, $defaults);
+    }
+
+    public function redirect(string $path, string $destination, int $status = 302): RouteDefinition
+    {
+        $fullPath = $this->buildFullPath($path);
+        $middleware = $this->options['middleware'] ?? [];
+        $validation = $this->options['validation'] ?? [];
+        $defaults = $this->options['defaults'] ?? [];
+
+        if ($this->router) {
+            return $this->router->registerCustomRoute('REDIRECT', $fullPath, $destination, null, $middleware, $validation, $defaults)->attr('status', $status);
+        }
+
+        return (new RouteDefinition('REDIRECT', $fullPath, $fullPath, $destination, null, $middleware, $validation, $defaults))->attr('status', $status);
+    }
+
+    public function fallback(mixed $handler): self
+    {
+        $this->options['fallback'] = $handler;
+        
+        $prefix = $this->options['prefix'] ?? '/';
+        $middleware = $this->options['middleware'] ?? [];
+        
+        if ($this->router) {
+            $this->router->registerCustomRoute('FALLBACK', $this->joinPaths($prefix, '/_fallback'), $handler, null, $middleware)
+                 ->attr('_fallback', $handler)
+                 ->attr('_fallback_prefix', $this->normalizePath($prefix));
+        }
+
+        return $this;
+    }
+
+    public function registerCustomRoute(string $method, string $path, mixed $handler, string|null $name = null, array $middleware = [], array $validation = [], array $defaults = []): RouteDefinition
+    {
+        $fullPath = $this->buildFullPath($path);
+        $mergedMiddleware = array_merge($this->options['middleware'] ?? [], $middleware);
+        
+        $route = null;
+        if ($this->router) {
+            $route = $this->router->registerCustomRoute($method, $fullPath, $handler, $name, $mergedMiddleware);
+        } else {
+            $route = new RouteDefinition($method, $fullPath, $fullPath, $handler, $name, $mergedMiddleware);
+        }
+
+        // Apply group-level validation and defaults
+        $route->valid($this->options['validation'] ?? []);
+        foreach ($this->options['defaults'] ?? [] as $p => $v) {
+            $route->default($p, $v);
+        }
+
+        // Apply route-level validation and defaults
+        $route->valid($validation);
+        foreach ($defaults as $p => $v) {
+            $route->default($p, $v);
+        }
+
+        return $route;
     }
 
     /**
@@ -112,13 +171,72 @@ class RouteGroup
      */
     private function buildFullPath(string $path): string
     {
-        $prefix = $this->options['prefix'] ?? '';
+        return $this->joinPaths($this->options['prefix'] ?? '', $path);
+    }
 
-        if (empty($prefix)) {
-            return $path;
+    public function group(array $options): RouteGroup
+    {
+        $prefix = $this->options['prefix'] ?? '';
+        $newPrefix = $this->joinPaths($prefix, $options['prefix'] ?? '');
+        
+        $middleware = $this->options['middleware'] ?? [];
+        $newMiddleware = array_merge($middleware, $options['middleware'] ?? []);
+
+        $validation = $this->options['validation'] ?? [];
+        $newValidation = array_merge($validation, $options['validation'] ?? []);
+
+        $defaults = $this->options['defaults'] ?? [];
+        $newDefaults = array_merge($defaults, $options['defaults'] ?? []);
+        
+        $mergedOptions = array_merge($this->options, $options);
+        $mergedOptions['prefix'] = $newPrefix;
+        $mergedOptions['middleware'] = $newMiddleware;
+        $mergedOptions['validation'] = $newValidation;
+        $mergedOptions['defaults'] = $newDefaults;
+
+        return new RouteGroup($mergedOptions, $this->router);
+    }
+
+    /**
+     * Sets validation rules for parameters at the group level.
+     *
+     * @param array|string $param Parameter name or array of rules
+     * @param array|string $rules Rules if first param is string
+     * @return self
+     */
+    public function valid(array|string $param, array|string $rules = []): self
+    {
+        if (!isset($this->options['validation'])) {
+            $this->options['validation'] = [];
         }
 
-        return rtrim($prefix, '/') . '/' . ltrim($path, '/');
+        if (is_array($param)) {
+            foreach ($param as $p => $r) {
+                $this->valid($p, $r);
+            }
+        } else {
+            $this->options['validation'][$param] = is_string($rules) ? [$rules] : $rules;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Sets a default value for a parameter at the group level.
+     *
+     * @param string $param
+     * @param mixed $value
+     * @return self
+     */
+    public function default(string $param, mixed $value): self
+    {
+        if (!isset($this->options['defaults'])) {
+            $this->options['defaults'] = [];
+        }
+
+        $this->options['defaults'][$param] = $value;
+
+        return $this;
     }
 
     /**
@@ -139,8 +257,33 @@ class RouteGroup
      *
      * @return array Group options configuration
      */
+    public function module(string|array $identifier, string|null $prefix = null): self
+    {
+        if ($this->router) {
+            // We need to pass the group context to the module loading.
+            // But ModuleLoader uses the router directly.
+            // If we use $this->router->module(), it won't have the group prefix/middleware.
+            // We should probably allow ModuleLoader to take a "target" which can be a Router or RouteGroup.
+            
+            // For now, let's just use the router but we have a problem: inheritance.
+            // A better way is to make RouteGroup have a way to load modules.
+            
+            $moduleLoader = new ModuleLoader($this->router->getConfig(), $this);
+            $moduleLoader->load($identifier, $prefix);
+        }
+        return $this;
+    }
+
     public function getOptions(): array
     {
         return $this->options;
+    }
+
+    /**
+     * @internal
+     */
+    public function getConfig(): Config
+    {
+        return $this->router->getConfig();
     }
 }
