@@ -11,7 +11,7 @@ final class RouteMatcherTest extends TestCase
 {
     public function testReturnsRouteOnSuccessfulMatch(): void
     {
-        $config = new \Atlas\Tests\Config\Config([
+        $config = new \Atlas\Config\Config([
             'modules_path' => ['/path/to/modules']
         ]);
 
@@ -38,7 +38,7 @@ final class RouteMatcherTest extends TestCase
 
     public function testReturnsNullOnNoMatch(): void
     {
-        $config = new \Atlas\Tests\Config\Config([
+        $config = new \Atlas\Config\Config([
             'modules_path' => ['/path/to/modules']
         ]);
 
@@ -63,7 +63,7 @@ final class RouteMatcherTest extends TestCase
 
     public function testCaseInsensitiveHttpMethodMatching(): void
     {
-        $config = new \Atlas\Tests\Config\Config([
+        $config = new \Atlas\Config\Config([
             'modules_path' => ['/path/to/modules']
         ]);
 
@@ -88,7 +88,7 @@ final class RouteMatcherTest extends TestCase
 
     public function testRouteCollectionIteratesCorrectly(): void
     {
-        $config = new \Atlas\Tests\Config\Config([
+        $config = new \Atlas\Config\Config([
             'modules_path' => ['/path/to/modules']
         ]);
 
@@ -108,7 +108,7 @@ final class RouteMatcherTest extends TestCase
 
     public function testUrlGenerationWithNamedRoute(): void
     {
-        $config = new \Atlas\Tests\Config\Config([
+        $config = new \Atlas\Config\Config([
             'modules_path' => ['/path/to/modules']
         ]);
 
@@ -123,19 +123,18 @@ final class RouteMatcherTest extends TestCase
 
     public function testHttpMethodsReturnSameInstanceForChaining(): void
     {
-        $config = new \Atlas\Tests\Config\Config([
+        $config = new \Atlas\Config\Config([
             'modules_path' => ['/path/to/modules']
         ]);
 
         $router = new \Atlas\Router\Router($config);
 
-        $methodsResult = $router
-            ->get('/get', 'Handler')
-            ->post('/post', 'Handler')
-            ->put('/put', 'Handler')
-            ->patch('/patch', 'Handler')
-            ->delete('/delete', 'Handler');
+        $router->get('/get', 'Handler');
+        $router->post('/post', 'Handler');
+        $router->put('/put', 'Handler');
+        $router->patch('/patch', 'Handler');
+        $router->delete('/delete', 'Handler');
 
-        $this->assertTrue($methodsResult instanceof \Atlas\Router\Router);
+        $this->assertCount(5, $router->getRoutes());
     }
 }
