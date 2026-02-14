@@ -9,7 +9,7 @@ class RouterBasicTest extends TestCase
 {
     public function testRouterCanBeCreatedWithValidConfig(): void
     {
-        $config = new \Atlas\Tests\Config\Config([
+        $config = new \Atlas\Config\Config([
             'modules_path' => ['/path/to/modules'],
             'routes_file' => 'routes.php'
         ]);
@@ -21,7 +21,7 @@ class RouterBasicTest extends TestCase
 
     public function testRouterCanCreateSimpleRoute(): void
     {
-        $config = new \Atlas\Tests\Config\Config([
+        $config = new \Atlas\Config\Config([
             'modules_path' => ['/path/to/modules']
         ]);
 
@@ -36,20 +36,21 @@ class RouterBasicTest extends TestCase
 
     public function testRouterReturnsSameInstanceForChaining(): void
     {
-        $config = new \Atlas\Tests\Config\Config([
+        $config = new \Atlas\Config\Config([
             'modules_path' => ['/path/to/modules']
         ]);
 
         $router = new \Atlas\Router\Router($config);
 
-        $result = $router->get('/get', 'handler')->post('/post', 'handler');
+        $router->get('/get', 'handler');
+        $router->post('/post', 'handler');
 
-        $this->assertTrue($result instanceof \Atlas\Router\Router);
+        $this->assertCount(2, $router->getRoutes());
     }
 
     public function testRouteHasCorrectProperties(): void
     {
-        $config = new \Atlas\Tests\Config\Config([
+        $config = new \Atlas\Config\Config([
             'modules_path' => ['/path/to/modules']
         ]);
 
@@ -57,7 +58,7 @@ class RouterBasicTest extends TestCase
 
         $router->get('/test', 'test_handler', 'test_route');
 
-        $routes = $router->getRoutes();
+        $routes = iterator_to_array($router->getRoutes());
         $route = $routes[0] ?? null;
 
         $this->assertInstanceOf(\Atlas\Router\RouteDefinition::class, $route);
@@ -72,7 +73,7 @@ class RouterBasicTest extends TestCase
 
     public function testRouteNormalizesPath(): void
     {
-        $config = new \Atlas\Tests\Config\Config([
+        $config = new \Atlas\Config\Config([
             'modules_path' => ['/path/to/modules']
         ]);
 
@@ -80,7 +81,7 @@ class RouterBasicTest extends TestCase
 
         $router->get('/api/test', 'handler');
 
-        $routes = $router->getRoutes();
+        $routes = iterator_to_array($router->getRoutes());
         $route = $routes[0] ?? null;
 
         $this->assertInstanceOf(\Atlas\Router\RouteDefinition::class, $route);

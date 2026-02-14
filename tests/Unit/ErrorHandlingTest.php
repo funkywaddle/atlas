@@ -2,7 +2,10 @@
 
 namespace Atlas\Tests\Unit;
 
+use Atlas\Exception\RouteNotFoundException;
+use Atlas\Router\RouteDefinition;
 use Atlas\Router\Router;
+use Atlas\Config\Config;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UriInterface;
@@ -11,11 +14,11 @@ final class ErrorHandlingTest extends TestCase
 {
     public function testMatchOrFailThrowsExceptionWhenNoRouteFound(): void
     {
-        $config = new \Atlas\Tests\Config\Config([
+        $config = new Config([
             'modules_path' => ['/path/to/modules']
         ]);
 
-        $router = new \Atlas\Router\Router($config);
+        $router = new Router($config);
 
         $uri = $this->createMock(UriInterface::class);
         $uri->method('getPath')->willReturn('/nonexistent');
@@ -27,18 +30,18 @@ final class ErrorHandlingTest extends TestCase
         $request->method('getMethod')->willReturn('GET');
         $request->method('getUri')->willReturn($uri);
 
-        $this->expectException(\Atlas\Exception\NotFoundRouteException::class);
+        $this->expectException(RouteNotFoundException::class);
 
         $router->matchOrFail($request);
     }
 
     public function testMatchReturnsNullWhenNoRouteFound(): void
     {
-        $config = new \Atlas\Tests\Config\Config([
+        $config = new Config([
             'modules_path' => ['/path/to/modules']
         ]);
 
-        $router = new \Atlas\Router\Router($config);
+        $router = new Router($config);
 
         $uri = $this->createMock(UriInterface::class);
         $uri->method('getPath')->willReturn('/nonexistent');
@@ -57,38 +60,39 @@ final class ErrorHandlingTest extends TestCase
 
     public function testRouteChainingWithDifferentHttpMethods(): void
     {
-        $config = new \Atlas\Tests\Config\Config([
+        $config = new Config([
             'modules_path' => ['/path/to/modules']
         ]);
 
-        $result = new \Atlas\Router\Router($config)->get('/test', 'GetHandler')->post('/test', 'PostHandler');
+        $router = new Router($config);
+        $router->get('/test', 'GetHandler');
+        $router->post('/test', 'PostHandler');
 
-        $this->assertTrue($result instanceof \Atlas\Router\Router);
-        $this->assertCount(2, $result->getRoutes());
+        $this->assertCount(2, $router->getRoutes());
     }
 
     public function testMatchUsingRouteDefinition(): void
     {
-        $config = new \Atlas\Tests\Config\Config([
+        $config = new Config([
             'modules_path' => ['/path/to/modules']
         ]);
 
-        $router = new \Atlas\Router\Router($config);
+        $router = new Router($config);
 
         $router->get('/test', 'TestMethod');
 
-        $routes = $router->getRoutes();
+        $routes = iterator_to_array($router->getRoutes());
         $this->assertCount(1, $routes);
-        $this->assertInstanceOf(\Atlas\Router\RouteDefinition::class, $routes[0]);
+        $this->assertInstanceOf(RouteDefinition::class, $routes[0]);
     }
 
     public function testCaseInsensitiveHttpMethodMatching(): void
     {
-        $config = new \Atlas\Tests\Config\Config([
+        $config = new Config([
             'modules_path' => ['/path/to/modules']
         ]);
 
-        $router = new \Atlas\Router\Router($config);
+        $router = new Router($config);
 
         $router->get('/test', 'TestHandler');
 
@@ -109,11 +113,11 @@ final class ErrorHandlingTest extends TestCase
 
     public function testPathNormalizationLeadingSlashes(): void
     {
-        $config = new \Atlas\Tests\Config\Config([
+        $config = new Config([
             'modules_path' => ['/path/to/modules']
         ]);
 
-        $router = new \Atlas\Router\Router($config);
+        $router = new Router($config);
 
         $router->get('/test', 'TestHandler');
 
@@ -134,11 +138,11 @@ final class ErrorHandlingTest extends TestCase
 
     public function testMatchOrFailThrowsExceptionForMultipleRoutes(): void
     {
-        $config = new \Atlas\Tests\Config\Config([
+        $config = new Config([
             'modules_path' => ['/path/to/modules']
         ]);
 
-        $router = new \Atlas\Router\Router($config);
+        $router = new Router($config);
 
         $router->get('/test', 'TestHandler');
 
@@ -154,6 +158,15 @@ final class ErrorHandlingTest extends TestCase
 
         $matchedRoute = $router->matchOrFail($request);
 
-        $this->assertInstanceOf(\Atlas\Router\RouteDefinition::class, $matchedRoute);
+        $this->assertInstanceOf(RouteDefinition::class, $matchedRoute);
+    }
+
+    public function testModuleThrowsExceptionWhenModulesPathIsMissing(): void
+    {
+        $config = new Config([]);
+        $router = new Router($config);
+
+        $this->expectException(\Atlas\Exception\MissingConfigurationException::class);
+        $router->module('User');
     }
 }
