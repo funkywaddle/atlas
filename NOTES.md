@@ -6,6 +6,10 @@ To ensure Atlas remains a high-quality, maintainable, and professional-grade lib
 
 ### Core Requirements
 - **PHP Version**: `^8.2`
+- **Execution Policy**:
+    - **Sequential Implementation**: Milestones are implemented one at a time.
+    - **No Auto-Advance**: Do not automatically move to the next milestone.
+    - **Strict Completion**: A milestone is NOT complete until the full suite of tests passes with zero deprecation warnings, zero errors, and zero failures.
 - **Principles**: 
     - **SOLID**: Strict adherence to object-oriented design principles.
     - **KISS** (Keep It Simple, Stupid): Prefer simple solutions over clever ones.

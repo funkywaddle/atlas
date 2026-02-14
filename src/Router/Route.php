@@ -19,12 +19,12 @@ final class Route
      *
      * @param string $method HTTP method (GET, POST, etc.)
      * @param string $path URI path
-     * @param string|callable $handler Route handler or string reference
+     * @param mixed $handler Route handler or string reference
      */
     public function __construct(
         private readonly string $method,
         private readonly string $path,
-        private readonly string|callable $handler
+        private readonly mixed $handler
     ) {}
 
     /**
@@ -50,9 +50,9 @@ final class Route
     /**
      * Gets the handler for this route.
      *
-     * @return string|callable Route handler
+     * @return mixed Route handler
      */
-    public function getHandler(): string|callable
+    public function getHandler(): mixed
     {
         return $this->handler;
     }
