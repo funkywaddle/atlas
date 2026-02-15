@@ -2,6 +2,11 @@
 
 A high-performance, modular PHP routing engine designed for professional-grade applications. It prioritizes developer experience, architectural purity, and interoperability through PSR-7 support.
 
+![CI](https://github.com/getphred/atlas/actions/workflows/ci.yml/badge.svg)
+![Packagist](https://img.shields.io/packagist/v/getphred/atlas.svg)
+[![Total Downloads](https://img.shields.io/packagist/dt/getphred/atlas.svg?style=flat-square)](https://packagist.org/packages/getphred/atlas)
+[![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
+
 ## Features
 
 - **Fluent API**: Expressive and chainable route definitions.
