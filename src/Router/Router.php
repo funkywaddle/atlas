@@ -49,13 +49,27 @@ class Router
         return $this->registerRoute('DELETE', $path, $handler, $name);
     }
 
-    public function registerCustomRoute(string $method, string $path, mixed $handler, string|null $name = null, array $middleware = [], array $validation = [], array $defaults = []): RouteDefinition
-    {
+    public function registerCustomRoute(
+        string $method,
+        string $path,
+        mixed $handler,
+        string|null $name = null,
+        array $middleware = [],
+        array $validation = [],
+        array $defaults = []
+    ): RouteDefinition {
         return $this->registerRoute($method, $path, $handler, $name, $middleware, $validation, $defaults);
     }
 
-    private function registerRoute(string $method, string $path, mixed $handler, string|null $name = null, array $middleware = [], array $validation = [], array $defaults = []): RouteDefinition
-    {
+    private function registerRoute(
+        string $method,
+        string $path,
+        mixed $handler,
+        string|null $name = null,
+        array $middleware = [],
+        array $validation = [],
+        array $defaults = []
+    ): RouteDefinition {
         $normalizedPath = $this->normalizePath($path);
         $routeDefinition = new RouteDefinition(
             $method,
@@ -211,7 +225,9 @@ class Router
             } elseif ($isOptional[$index] === '?') {
                 $path = str_replace($pattern, '', $path);
             } else {
-                throw new \InvalidArgumentException(sprintf('Missing required parameter "%s" for route URL generation', $name));
+                throw new \InvalidArgumentException(
+                    sprintf('Missing required parameter "%s" for route URL generation', $name)
+                );
             }
         }
 

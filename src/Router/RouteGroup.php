@@ -41,7 +41,15 @@ class RouteGroup
         $defaults = $this->options['defaults'] ?? [];
 
         if ($this->router) {
-            return $this->router->registerCustomRoute('GET', $fullPath, $handler, $name, $middleware, $validation, $defaults);
+            return $this->router->registerCustomRoute(
+                'GET',
+                $fullPath,
+                $handler,
+                $name,
+                $middleware,
+                $validation,
+                $defaults
+            );
         }
 
         return new RouteDefinition('GET', $fullPath, $fullPath, $handler, $name, $middleware, $validation, $defaults);
@@ -55,7 +63,15 @@ class RouteGroup
         $defaults = $this->options['defaults'] ?? [];
 
         if ($this->router) {
-            return $this->router->registerCustomRoute('POST', $fullPath, $handler, $name, $middleware, $validation, $defaults);
+            return $this->router->registerCustomRoute(
+                'POST',
+                $fullPath,
+                $handler,
+                $name,
+                $middleware,
+                $validation,
+                $defaults
+            );
         }
 
         return new RouteDefinition('POST', $fullPath, $fullPath, $handler, $name, $middleware, $validation, $defaults);
@@ -69,7 +85,15 @@ class RouteGroup
         $defaults = $this->options['defaults'] ?? [];
 
         if ($this->router) {
-            return $this->router->registerCustomRoute('PUT', $fullPath, $handler, $name, $middleware, $validation, $defaults);
+            return $this->router->registerCustomRoute(
+                'PUT',
+                $fullPath,
+                $handler,
+                $name,
+                $middleware,
+                $validation,
+                $defaults
+            );
         }
 
         return new RouteDefinition('PUT', $fullPath, $fullPath, $handler, $name, $middleware, $validation, $defaults);
@@ -83,7 +107,15 @@ class RouteGroup
         $defaults = $this->options['defaults'] ?? [];
 
         if ($this->router) {
-            return $this->router->registerCustomRoute('PATCH', $fullPath, $handler, $name, $middleware, $validation, $defaults);
+            return $this->router->registerCustomRoute(
+                'PATCH',
+                $fullPath,
+                $handler,
+                $name,
+                $middleware,
+                $validation,
+                $defaults
+            );
         }
 
         return new RouteDefinition('PATCH', $fullPath, $fullPath, $handler, $name, $middleware, $validation, $defaults);
@@ -97,10 +129,27 @@ class RouteGroup
         $defaults = $this->options['defaults'] ?? [];
 
         if ($this->router) {
-            return $this->router->registerCustomRoute('DELETE', $fullPath, $handler, $name, $middleware, $validation, $defaults);
+            return $this->router->registerCustomRoute(
+                'DELETE',
+                $fullPath,
+                $handler,
+                $name,
+                $middleware,
+                $validation,
+                $defaults
+            );
         }
 
-        return new RouteDefinition('DELETE', $fullPath, $fullPath, $handler, $name, $middleware, $validation, $defaults);
+        return new RouteDefinition(
+            'DELETE',
+            $fullPath,
+            $fullPath,
+            $handler,
+            $name,
+            $middleware,
+            $validation,
+            $defaults
+        );
     }
 
     public function redirect(string $path, string $destination, int $status = 302): RouteDefinition
@@ -111,10 +160,27 @@ class RouteGroup
         $defaults = $this->options['defaults'] ?? [];
 
         if ($this->router) {
-            return $this->router->registerCustomRoute('REDIRECT', $fullPath, $destination, null, $middleware, $validation, $defaults)->attr('status', $status);
+            return $this->router->registerCustomRoute(
+                'REDIRECT',
+                $fullPath,
+                $destination,
+                null,
+                $middleware,
+                $validation,
+                $defaults
+            )->attr('status', $status);
         }
 
-        return (new RouteDefinition('REDIRECT', $fullPath, $fullPath, $destination, null, $middleware, $validation, $defaults))->attr('status', $status);
+        return (new RouteDefinition(
+            'REDIRECT',
+            $fullPath,
+            $fullPath,
+            $destination,
+            null,
+            $middleware,
+            $validation,
+            $defaults
+        ))->attr('status', $status);
     }
 
     public function fallback(mixed $handler): self
@@ -125,7 +191,13 @@ class RouteGroup
         $middleware = $this->options['middleware'] ?? [];
 
         if ($this->router) {
-            $this->router->registerCustomRoute('FALLBACK', $this->joinPaths($prefix, '/_fallback'), $handler, null, $middleware)
+            $this->router->registerCustomRoute(
+                'FALLBACK',
+                $this->joinPaths($prefix, '/_fallback'),
+                $handler,
+                null,
+                $middleware
+            )
                  ->attr('_fallback', $handler)
                  ->attr('_fallback_prefix', $this->normalizePath($prefix));
         }
@@ -133,8 +205,15 @@ class RouteGroup
         return $this;
     }
 
-    public function registerCustomRoute(string $method, string $path, mixed $handler, string|null $name = null, array $middleware = [], array $validation = [], array $defaults = []): RouteDefinition
-    {
+    public function registerCustomRoute(
+        string $method,
+        string $path,
+        mixed $handler,
+        string|null $name = null,
+        array $middleware = [],
+        array $validation = [],
+        array $defaults = []
+    ): RouteDefinition {
         $fullPath = $this->buildFullPath($path);
         $mergedMiddleware = array_merge($this->options['middleware'] ?? [], $middleware);
 

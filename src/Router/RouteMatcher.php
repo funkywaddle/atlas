@@ -112,8 +112,14 @@ class RouteMatcher
      * @param array $attributes Extracted attributes
      * @return bool
      */
-    private function isMatch(string $method, string $path, string $host, RouteDefinition $route, array &$attributes, ?string $overridePath = null): bool
-    {
+    private function isMatch(
+        string $method,
+        string $path,
+        string $host,
+        RouteDefinition $route,
+        array &$attributes,
+        ?string $overridePath = null
+    ): bool {
         $routeMethod = strtoupper($route->getMethod());
         if ($routeMethod !== $method && $routeMethod !== 'REDIRECT') {
             return false;
@@ -128,7 +134,9 @@ class RouteMatcher
             }
         }
 
-        $pattern = $overridePath ? $this->compilePatternFromPath($overridePath, $route) : $this->getPatternForRoute($route);
+        $pattern = $overridePath
+            ? $this->compilePatternFromPath($overridePath, $route)
+            : $this->getPatternForRoute($route);
 
         if (preg_match($pattern, $path, $matches)) {
             $attributes = array_filter($matches, 'is_string', ARRAY_FILTER_USE_KEY);
@@ -175,33 +183,36 @@ class RouteMatcher
         $validation = $route->getValidation();
         $defaults = $route->getDefaults();
 
-        // Replace {{param?}} and {{param}} with regex
-        $pattern = preg_replace_callback('#/\{\{([a-zA-Z0-9_]+)(\?)?\}\}#', function ($matches) use ($validation, $defaults) {
-            $name = $matches[1];
-            $optional = (isset($matches[2]) && $matches[2] === '?') || array_key_exists($name, $defaults);
+        $pattern = preg_replace_callback(
+            '#/\{\{([a-zA-Z0-9_]+)(\?)?\}\}#',
+            function ($matches) use ($validation, $defaults) {
+                $name = $matches[1];
+                $optional = (isset($matches[2]) && $matches[2] === '?') || array_key_exists($name, $defaults);
 
-            $rules = $validation[$name] ?? [];
-            $regex = '[^/]+';
+                $rules = $validation[$name] ?? [];
+                $regex = '[^/]+';
 
-            // Validation rules support
-            foreach ((array)$rules as $rule) {
-                if ($rule === 'numeric' || $rule === 'int') {
-                    $regex = '[0-9]+';
-                } elseif ($rule === 'alpha') {
-                    $regex = '[a-zA-Z]+';
-                } elseif ($rule === 'alphanumeric') {
-                    $regex = '[a-zA-Z0-9]+';
-                } elseif (str_starts_with($rule, 'regex:')) {
-                    $regex = substr($rule, 6);
+                // Validation rules support
+                foreach ((array)$rules as $rule) {
+                    if ($rule === 'numeric' || $rule === 'int') {
+                        $regex = '[0-9]+';
+                    } elseif ($rule === 'alpha') {
+                        $regex = '[a-zA-Z]+';
+                    } elseif ($rule === 'alphanumeric') {
+                        $regex = '[a-zA-Z0-9]+';
+                    } elseif (str_starts_with($rule, 'regex:')) {
+                        $regex = substr($rule, 6);
+                    }
                 }
-            }
 
-            if ($optional) {
-                return '(?:/(?P<' . $name . '>' . $regex . '))?';
-            }
+                if ($optional) {
+                    return '(?:/(?P<' . $name . '>' . $regex . '))?';
+                }
 
-            return '/(?P<' . $name . '>' . $regex . ')';
-        }, $path);
+                return '/(?P<' . $name . '>' . $regex . ')';
+            },
+            $path
+        );
 
         $pattern = str_replace('//', '/', $pattern);
 
@@ -215,8 +226,10 @@ class RouteMatcher
      * @param array $attributes
      * @return RouteDefinition
      */
-    private function applyAttributes(RouteDefinition $route, array $attributes): RouteDefinition
-    {
+    private function applyAttributes(
+        RouteDefinition $route,
+        array $attributes
+    ): RouteDefinition {
         $data = $route->toArray();
         $data['attributes'] = array_merge($data['attributes'], $attributes);
 

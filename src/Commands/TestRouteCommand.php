@@ -288,7 +288,9 @@ class TestRouteCommand
 
         if ($result->isFound()) {
             echo "Match Found!" . PHP_EOL;
-            echo "Route: " . $result->getRoute()->getName() . " [" . $result->getRoute()->getMethod() . " " . $result->getRoute()->getPath() . "]" . PHP_EOL;
+            echo "Route: " . $result->getRoute()->getName() . " [" .
+                $result->getRoute()->getMethod() . " " .
+                $result->getRoute()->getPath() . "]" . PHP_EOL;
             echo "Parameters: " . json_encode($result->getParameters()) . PHP_EOL;
             exit(0);
         } else {

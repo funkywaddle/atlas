@@ -61,8 +61,11 @@ class ModuleLoader
      * @param string|null $moduleName Optional module name
      * @return void
      */
-    private function loadModuleRoutes(string $routesFile, string|null $prefix = null, string|null $moduleName = null): void
-    {
+    private function loadModuleRoutes(
+        string $routesFile,
+        string|null $prefix = null,
+        string|null $moduleName = null
+    ): void {
         $moduleRoutes = require $routesFile;
 
         $options = [];
