@@ -12,7 +12,8 @@ class MatchResult implements \JsonSerializable
         private readonly RouteDefinition|null $route = null,
         private readonly array $parameters = [],
         private readonly array $diagnostics = []
-    ) {}
+    ) {
+    }
 
     public function isFound(): bool
     {

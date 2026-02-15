@@ -23,7 +23,8 @@ class Config implements ArrayAccess, IteratorAggregate
      */
     public function __construct(
         private array $options
-    ) {}
+    ) {
+    }
 
     /**
      * Retrieves a configuration value by key.

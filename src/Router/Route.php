@@ -25,7 +25,8 @@ final class Route
         private readonly string $method,
         private readonly string $path,
         private readonly mixed $handler
-    ) {}
+    ) {
+    }
 
     /**
      * Gets the HTTP method of this route.

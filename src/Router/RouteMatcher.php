@@ -34,7 +34,7 @@ class RouteMatcher
                 $attributes = $this->mergeDefaults($route, $attributes);
                 return $this->applyAttributes($route, $attributes);
             }
-            
+
             // i18n support: check alternative paths
             $routeAttributes = $route->getAttributes();
             if (isset($routeAttributes['i18n']) && is_array($routeAttributes['i18n'])) {
@@ -129,7 +129,7 @@ class RouteMatcher
         }
 
         $pattern = $overridePath ? $this->compilePatternFromPath($overridePath, $route) : $this->getPatternForRoute($route);
-        
+
         if (preg_match($pattern, $path, $matches)) {
             $attributes = array_filter($matches, 'is_string', ARRAY_FILTER_USE_KEY);
             return true;
@@ -179,10 +179,10 @@ class RouteMatcher
         $pattern = preg_replace_callback('#/\{\{([a-zA-Z0-9_]+)(\?)?\}\}#', function ($matches) use ($validation, $defaults) {
             $name = $matches[1];
             $optional = (isset($matches[2]) && $matches[2] === '?') || array_key_exists($name, $defaults);
-            
+
             $rules = $validation[$name] ?? [];
             $regex = '[^/]+';
-            
+
             // Validation rules support
             foreach ((array)$rules as $rule) {
                 if ($rule === 'numeric' || $rule === 'int') {
@@ -199,7 +199,7 @@ class RouteMatcher
             if ($optional) {
                 return '(?:/(?P<' . $name . '>' . $regex . '))?';
             }
-            
+
             return '/(?P<' . $name . '>' . $regex . ')';
         }, $path);
 
@@ -219,7 +219,7 @@ class RouteMatcher
     {
         $data = $route->toArray();
         $data['attributes'] = array_merge($data['attributes'], $attributes);
-        
+
         return new RouteDefinition(
             $data['method'],
             $data['pattern'],

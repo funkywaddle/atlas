@@ -18,7 +18,8 @@ class RouteGroup
     public function __construct(
         private array $options = [],
         private readonly Router|null $router = null
-    ) {}
+    ) {
+    }
 
     /**
      * Creates a new route group with options and router.
@@ -42,7 +43,7 @@ class RouteGroup
         if ($this->router) {
             return $this->router->registerCustomRoute('GET', $fullPath, $handler, $name, $middleware, $validation, $defaults);
         }
-        
+
         return new RouteDefinition('GET', $fullPath, $fullPath, $handler, $name, $middleware, $validation, $defaults);
     }
 
@@ -56,7 +57,7 @@ class RouteGroup
         if ($this->router) {
             return $this->router->registerCustomRoute('POST', $fullPath, $handler, $name, $middleware, $validation, $defaults);
         }
-        
+
         return new RouteDefinition('POST', $fullPath, $fullPath, $handler, $name, $middleware, $validation, $defaults);
     }
 
@@ -70,7 +71,7 @@ class RouteGroup
         if ($this->router) {
             return $this->router->registerCustomRoute('PUT', $fullPath, $handler, $name, $middleware, $validation, $defaults);
         }
-        
+
         return new RouteDefinition('PUT', $fullPath, $fullPath, $handler, $name, $middleware, $validation, $defaults);
     }
 
@@ -84,7 +85,7 @@ class RouteGroup
         if ($this->router) {
             return $this->router->registerCustomRoute('PATCH', $fullPath, $handler, $name, $middleware, $validation, $defaults);
         }
-        
+
         return new RouteDefinition('PATCH', $fullPath, $fullPath, $handler, $name, $middleware, $validation, $defaults);
     }
 
@@ -98,7 +99,7 @@ class RouteGroup
         if ($this->router) {
             return $this->router->registerCustomRoute('DELETE', $fullPath, $handler, $name, $middleware, $validation, $defaults);
         }
-        
+
         return new RouteDefinition('DELETE', $fullPath, $fullPath, $handler, $name, $middleware, $validation, $defaults);
     }
 
@@ -119,10 +120,10 @@ class RouteGroup
     public function fallback(mixed $handler): self
     {
         $this->options['fallback'] = $handler;
-        
+
         $prefix = $this->options['prefix'] ?? '/';
         $middleware = $this->options['middleware'] ?? [];
-        
+
         if ($this->router) {
             $this->router->registerCustomRoute('FALLBACK', $this->joinPaths($prefix, '/_fallback'), $handler, null, $middleware)
                  ->attr('_fallback', $handler)
@@ -136,7 +137,7 @@ class RouteGroup
     {
         $fullPath = $this->buildFullPath($path);
         $mergedMiddleware = array_merge($this->options['middleware'] ?? [], $middleware);
-        
+
         $route = null;
         if ($this->router) {
             $route = $this->router->registerCustomRoute($method, $fullPath, $handler, $name, $mergedMiddleware);
@@ -179,7 +180,7 @@ class RouteGroup
 
         $prefix = $this->options['prefix'] ?? '';
         $newPrefix = $this->joinPaths($prefix, $options['prefix'] ?? '');
-        
+
         $middleware = $this->options['middleware'] ?? [];
         $newMiddleware = array_merge($middleware, $options['middleware'] ?? []);
 
@@ -188,7 +189,7 @@ class RouteGroup
 
         $defaults = $this->options['defaults'] ?? [];
         $newDefaults = array_merge($defaults, $options['defaults'] ?? []);
-        
+
         $mergedOptions = array_merge($this->options, $options);
         $mergedOptions['prefix'] = $newPrefix;
         $mergedOptions['middleware'] = $newMiddleware;
@@ -267,10 +268,10 @@ class RouteGroup
             // But ModuleLoader uses the router directly.
             // If we use $this->router->module(), it won't have the group prefix/middleware.
             // We should probably allow ModuleLoader to take a "target" which can be a Router or RouteGroup.
-            
+
             // For now, let's just use the router but we have a problem: inheritance.
             // A better way is to make RouteGroup have a way to load modules.
-            
+
             $moduleLoader = new ModuleLoader($this->router->getConfig(), $this);
             $moduleLoader->load($identifier, $prefix);
         }

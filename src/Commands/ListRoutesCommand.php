@@ -21,7 +21,7 @@ class ListRoutesCommand
         $json = in_array('--json', $argv);
         $routes = $router->getRoutes();
         $output = [];
-        
+
         foreach ($routes as $route) {
             $output[] = $route->toArray();
         }
@@ -32,10 +32,11 @@ class ListRoutesCommand
             printf("%-10s | %-30s | %-20s | %-30s\n", "Method", "Path", "Name", "Handler");
             echo str_repeat("-", 100) . PHP_EOL;
             foreach ($output as $r) {
-                printf("%-10s | %-30s | %-20s | %-30s\n", 
-                    $r['method'], 
-                    $r['path'], 
-                    $r['name'] ?? '', 
+                printf(
+                    "%-10s | %-30s | %-20s | %-30s\n",
+                    $r['method'],
+                    $r['path'],
+                    $r['name'] ?? '',
                     is_string($r['handler']) ? $r['handler'] : 'Closure'
                 );
             }

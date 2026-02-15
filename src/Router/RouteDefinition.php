@@ -65,13 +65,29 @@ class RouteDefinition implements \JsonSerializable, \Serializable
         private array $defaults = [],
         private string|null $module = null,
         private array $attributes = []
-    ) {}
+    ) {
+    }
 
-    public function getMethod(): string { return $this->method; }
-    public function getPattern(): string { return $this->pattern; }
-    public function getPath(): string { return $this->path; }
-    public function getHandler(): mixed { return $this->handler; }
-    public function getName(): ?string { return $this->name; }
+    public function getMethod(): string
+    {
+        return $this->method;
+    }
+    public function getPattern(): string
+    {
+        return $this->pattern;
+    }
+    public function getPath(): string
+    {
+        return $this->path;
+    }
+    public function getHandler(): mixed
+    {
+        return $this->handler;
+    }
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
 
     public function name(string $name): self
     {
@@ -79,7 +95,10 @@ class RouteDefinition implements \JsonSerializable, \Serializable
         return $this;
     }
 
-    public function getMiddleware(): array { return $this->middleware; }
+    public function getMiddleware(): array
+    {
+        return $this->middleware;
+    }
 
     public function middleware(string|array $middleware): self
     {
@@ -91,7 +110,10 @@ class RouteDefinition implements \JsonSerializable, \Serializable
         return $this;
     }
 
-    public function getValidation(): array { return $this->validation; }
+    public function getValidation(): array
+    {
+        return $this->validation;
+    }
 
     public function valid(array|string $param, array|string $rules = []): self
     {
@@ -105,7 +127,10 @@ class RouteDefinition implements \JsonSerializable, \Serializable
         return $this;
     }
 
-    public function getDefaults(): array { return $this->defaults; }
+    public function getDefaults(): array
+    {
+        return $this->defaults;
+    }
 
     public function default(string $param, mixed $value): self
     {
@@ -113,9 +138,15 @@ class RouteDefinition implements \JsonSerializable, \Serializable
         return $this;
     }
 
-    public function getModule(): ?string { return $this->module; }
+    public function getModule(): ?string
+    {
+        return $this->module;
+    }
 
-    public function getAttributes(): array { return $this->attributes; }
+    public function getAttributes(): array
+    {
+        return $this->attributes;
+    }
 
     public function attr(string $key, mixed $value): self
     {

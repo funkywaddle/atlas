@@ -19,7 +19,8 @@ class ModuleLoader
     public function __construct(
         private readonly Config $config,
         private readonly Router|RouteGroup $target
-    ) {}
+    ) {
+    }
 
     /**
      * Loads routes for a given module or modules.
@@ -63,7 +64,7 @@ class ModuleLoader
     private function loadModuleRoutes(string $routesFile, string|null $prefix = null, string|null $moduleName = null): void
     {
         $moduleRoutes = require $routesFile;
-        
+
         $options = [];
         if ($prefix) {
             $options['prefix'] = $prefix;

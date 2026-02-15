@@ -119,7 +119,7 @@ class Router
             $attributes = [];
             $routeMethod = strtoupper($route->getMethod());
             $routePath = $route->getPath();
-            
+
             $matchStatus = 'mismatch';
             if ($routeMethod !== $method && $routeMethod !== 'REDIRECT') {
                 $matchStatus = 'method_mismatch';
@@ -129,7 +129,7 @@ class Router
                     $matchStatus = 'matched';
                     $attributes = array_filter($matches, 'is_string', ARRAY_FILTER_USE_KEY);
                     $attributes = array_merge($route->getDefaults(), $attributes);
-                    
+
                     return new MatchResult(true, $route, $attributes, $diagnostics);
                 }
             }
@@ -163,7 +163,7 @@ class Router
     public function fallback(mixed $handler): self
     {
         $this->fallbackHandler = $handler;
-        
+
         // Register a special route to carry the global fallback
         $this->registerRoute('FALLBACK', '/_fallback', $handler)
              ->attr('_fallback', $handler)
@@ -203,7 +203,7 @@ class Router
 
         foreach ($parameterNames as $index => $name) {
             $pattern = '{{' . $name . ($isOptional[$index] === '?' ? '?' : '') . '}}';
-            
+
             if (array_key_exists($name, $parameters)) {
                 $path = str_replace($pattern, (string)$parameters[$name], $path);
             } elseif (array_key_exists($name, $defaults)) {
