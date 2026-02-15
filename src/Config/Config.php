@@ -160,7 +160,7 @@ class Config implements ArrayAccess, IteratorAggregate
     /**
      * Creates an iterator for the configuration options.
      *
-     * @return Traversable Array iterator over configuration
+     * @return \Traversable Array iterator over configuration
      */
     public function getIterator(): \Traversable
     {

@@ -4,8 +4,6 @@ namespace Atlas\Router;
 
 /**
  * Manages groupings of routes for prefix and middleware organization.
- *
- * @implements \IteratorAggregate<array-key, mixed>
  */
 class RouteGroup
 {
@@ -256,9 +254,11 @@ class RouteGroup
     }
 
     /**
-     * Gets all group options.
+     * Registers a module within the group.
      *
-     * @return array Group options configuration
+     * @param string|array $identifier The module identifier or array of identifiers
+     * @param string|null $prefix Optional URI prefix
+     * @return self
      */
     public function module(string|array $identifier, string|null $prefix = null): self
     {
@@ -285,7 +285,7 @@ class RouteGroup
     /**
      * @internal
      */
-    public function getConfig(): Config
+    public function getConfig(): \Atlas\Config\Config
     {
         return $this->router->getConfig();
     }
