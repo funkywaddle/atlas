@@ -65,8 +65,12 @@ $router->group(['prefix' => '/api', 'middleware' => ['auth']])->group(function($
     $group->get('/settings', 'SettingsHandler');
 });
 ```
+All group routes inherit whatever options you pass in (middleware, prefix, etc).
 
-You can also save a route group to a variable for more flexible route definitions:
+While the above syntax works and is completely viable, I find the double group method syntax a bit confusing. 
+
+So, here is another way you can do it (my personal preferred method) that is, in my opinion, cleaner, and more readable.
+
 
 ```php
 $api = $router->group(['prefix' => '/api']);
