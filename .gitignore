@@ -4,7 +4,9 @@ composer.lock
 .phpunit.result.cache
 CLAUDE.md
 AGENTS.md
+.junie/
 /coverage/
 .idea/
 .vscode/
 *.log
+.junie/
