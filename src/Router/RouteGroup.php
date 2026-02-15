@@ -31,9 +31,7 @@ class RouteGroup
      */
     public static function create(array $options, Router $router): self
     {
-        $self = new self($options);
-        $self->router = $router;
-        return $self;
+        return new self($options, $router);
     }
 
     public function get(string $path, mixed $handler, string|null $name = null): RouteDefinition
@@ -174,8 +172,13 @@ class RouteGroup
         return $this->joinPaths($this->options['prefix'] ?? '', $path);
     }
 
-    public function group(array $options): RouteGroup
+    public function group(array|callable $options): RouteGroup
     {
+        if (is_callable($options)) {
+            $options($this);
+            return $this;
+        }
+
         $prefix = $this->options['prefix'] ?? '';
         $newPrefix = $this->joinPaths($prefix, $options['prefix'] ?? '');
         
